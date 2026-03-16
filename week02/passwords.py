@@ -116,7 +116,6 @@ if __name__ == "__main__":
 """
 Password Strength Checker
 
-Enhancement (Exceeded Requirements):
 After evaluating the password strength, the program also provides suggestions
 to improve weak passwords. If the password has low complexity, the program
 suggests adding uppercase letters, lowercase letters, numbers, or special
@@ -137,9 +136,7 @@ SPECIAL=["!","@","#","$","%","^","&","*","(",")","-","_","=","+","[","]","{","}"
          "|",";",":","'","\"",",",".","<",">","?","/","\\","`","~"]
 
 
-# --------------------------------------------------------
 # Function: word_in_file
-# --------------------------------------------------------
 def word_in_file(word, filename, case_sensitive=False):
 
     try:
@@ -160,10 +157,8 @@ def word_in_file(word, filename, case_sensitive=False):
         print(f"File {filename} not found.")
         return False
 
-
-# --------------------------------------------------------
 # Function: word_has_character
-# --------------------------------------------------------
+
 def word_has_character(word, character_list):
 
     for char in word:
@@ -172,10 +167,8 @@ def word_has_character(word, character_list):
 
     return False
 
-
-# --------------------------------------------------------
 # Function: word_complexity
-# --------------------------------------------------------
+
 def word_complexity(word):
 
     complexity = 0
@@ -195,9 +188,8 @@ def word_complexity(word):
     return complexity
 
 
-# --------------------------------------------------------
 # Function: password_strength
-# --------------------------------------------------------
+
 def password_strength(password, min_length=10, strong_length=16):
 
     # Dictionary check (case insensitive)
@@ -227,9 +219,7 @@ def password_strength(password, min_length=10, strong_length=16):
 
     return strength
 
-
-# --------------------------------------------------------
-# Optional Enhancement Function (Exceeded Requirements)
+# Enhancement Function 
 # --------------------------------------------------------
 def password_suggestions(password):
 
@@ -255,8 +245,6 @@ def password_suggestions(password):
         for s in suggestions:
             print("-", s)
 
-
-# --------------------------------------------------------
 # Main Program
 # --------------------------------------------------------
 def main():
@@ -280,7 +268,6 @@ def main():
         print()
 
 
-# --------------------------------------------------------
 # Required execution block
 # --------------------------------------------------------
 if __name__ == "__main__":
