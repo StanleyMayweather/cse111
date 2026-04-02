@@ -1,7 +1,8 @@
 """
 File: chemistry.py
 Author: Stanley Adeyemi Eberendu
-Description: This program calculates the molar mass and number of moles in a chemical sample based on a user-provided formula and mass.
+Description: This program calculates the molar mass and number of moles in a 
+chemical sample based on a user-provided formula and mass.
 
 Enhancement: Added a function 'get_formula_name' that returns the common name 
 of a chemical formula (e.g., "H2O" returns "Water").
