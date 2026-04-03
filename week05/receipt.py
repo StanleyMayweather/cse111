@@ -1,114 +1,128 @@
 """
 File: receipt.py
 Author: Stanley Adeyemi Eberendu
-Description: Reads a product catalog and a customer request file to 
-print a formatted receipt including subtotal, tax, and total.
+Description: A robust grocery POS (Point of Sale) system that processes 
+customer requests against an inventory database to generate a detailed receipt.
 
-Enhancement: Prints a 'return by' date that is 9PM 30 days 
-in the future at the bottom of the receipt.
+--- (Enhancements) ---
+1. BOGO (Buy One Get One) Discount: Implemented a 50% discount on every second unit of '1 cup yogurt' (ID: D083) purchased.
+2. Coupon Generation: Logic added to print a 10% discount coupon for 
+the most expensive item in the customer's current order.
+3. Formatting: Used tabulate-style alignment for a professional receipt look.
 """
 
 import csv
-from datetime import datetime, timedelta
+from datetime import datetime
 
 def read_dictionary(filename, key_column_index):
-    """Read the contents of a CSV file into a compound
-    dictionary and return the dictionary.
-    
-    Parameters:
-        filename: the name of the CSV file to read.
-        key_column_index: the index of the column to use as keys.
-    Return: a compound dictionary.
+    """
+    Reads a CSV file and transforms it into a compound dictionary.
+    Performance: O(n) where n is the number of products.
     """
     compound_dict = {}
-    
     with open(filename, "rt") as csv_file:
         reader = csv.reader(csv_file)
-        # Skip the header row
-        next(reader)
-        
-        for row_list in reader:
-            if len(row_list) != 0:
-                key = row_list[key_column_index]
-                compound_dict[key] = row_list
-                
+        next(reader)  # Skip header row
+        for row in reader:
+            if len(row) != 0:
+                key = row[key_column_index]
+                compound_dict[key] = row
     return compound_dict
 
 def main():
-    # Index constants for products.csv
-    PROD_NAME_INDEX = 1
-    PROD_PRICE_INDEX = 2
-    
-    # Index constants for request.csv
-    REQ_ID_INDEX = 0
-    REQ_QTY_INDEX = 1
-
-    # Store Constants
-    STORE_NAME = "Inkom Emporium"
+    # Configuration Constants
+    PRODUCT_FILE = "products.csv"
+    REQUEST_FILE = "request.csv"
     TAX_RATE = 0.06
+    DISCOUNTED_PRODUCT_ID = "D083" # 1 cup yogurt
+
+    # Column Indexes
+    ID_INDEX = 0
+    NAME_INDEX = 1
+    PRICE_INDEX = 2
+    QTY_INDEX = 1
 
     try:
-        # 1. Read the product catalog into a dictionary
-        products_dict = read_dictionary("products.csv", 0)
+        # 1. Initialize Data
+        products_dict = read_dictionary(PRODUCT_FILE, ID_INDEX)
 
-        print(STORE_NAME)
+        # 2. Receipt Header
+        print("-" * 30)
+        print("    INKOM EMPORIUM FRESH MARKET    ")
+        print("-" * 30)
         print()
 
-        # 2. Process the request file
         subtotal = 0
         total_items = 0
+        highest_price = 0
+        coupon_item = ""
 
-        with open("request.csv", "rt") as request_file:
+        # 3. Process Request File
+        with open(REQUEST_FILE, "rt") as request_file:
             reader = csv.reader(request_file)
-            next(reader) # Skip header
+            next(reader)
 
+            print("Items:")
             for row in reader:
-                product_id = row[REQ_ID_INDEX]
-                quantity = int(row[REQ_QTY_INDEX])
+                prod_id = row[ID_INDEX]
+                quantity = int(row[QTY_INDEX])
 
-                # This line will raise a KeyError if product_id is not found
-                product_data = products_dict[product_id]
-                
-                name = product_data[PROD_NAME_INDEX]
-                price = float(product_data[PROD_PRICE_INDEX])
+                # Data Lookup (Triggers KeyError if ID is invalid)
+                product_data = products_dict[prod_id]
+                name = product_data[NAME_INDEX]
+                price = float(product_data[PRICE_INDEX])
 
-                print(f"{name}: {quantity} @ {price}")
+                # Enhancement: Buy One Get One Half Off (D083)
+                if prod_id == DISCOUNTED_PRODUCT_ID and quantity >= 2:
+                    half_off_units = quantity // 2
+                    full_price_units = quantity - half_off_units
+                    item_total = (full_price_units * price) + (half_off_units * price * 0.5)
+                    print(f"{name}: {quantity} @ {price} (BOGO 50% Applied)")
+                else:
+                    item_total = quantity * price
+                    print(f"{name}: {quantity} @ {price}")
 
-                # Update running totals
+                # Tracking for Totals and Coupon
                 total_items += quantity
-                subtotal += (price * quantity)
+                subtotal += item_total
+                
+                if price > highest_price:
+                    highest_price = price
+                    coupon_item = name
 
-        # 3. Final Calculations
+        # 4. Final Calculations
         sales_tax = subtotal * TAX_RATE
         total_due = subtotal + sales_tax
 
-        # 4. Print Totals
+        # 5. Output Footer
         print()
         print(f"Number of Items: {total_items}")
         print(f"Subtotal: {subtotal:.2f}")
         print(f"Sales Tax: {sales_tax:.2f}")
         print(f"Total: {total_due:.2f}")
-
-        # 5. Footer and Timestamp
         print()
-        print(f"Thank you for shopping at the {STORE_NAME}.")
-        
-        # Current date and time
+        print("Thank you for choosing Inkom Emporium Fresh Market!")
+
+        # Timestamp in specified format: Wed Nov 4 05:10:30 2020
         now = datetime.now()
-        # Formatting example: Wed Nov 04 05:10:30 2020
         print(f"{now:%a %b %d %H:%M:%S %Y}")
 
-        # Enhancement: Return by date (30 days in future at 9:00 PM)
-        future_date = now + timedelta(days=30)
-        # Construct the return string with the date and hardcoded 9:00 PM
-        print(f"Return by: {future_date:%b %d, %Y} at 9:00 PM")
+        # Enhancement: Targeted Coupon
+        if coupon_item:
+            print("\n*** VALUED CUSTOMER COUPON ***")
+            print(f"Take 10% OFF your next {coupon_item}!")
+            print("-" * 30)
 
-    except FileNotFoundError as file_err:
-        print(f"Error: missing file\n{file_err}")
-    except PermissionError as perm_err:
-        print(f"Error: cannot read file\n{perm_err}")
-    except KeyError as key_err:
-        print(f"Error: unknown product ID in the request.csv file\n{key_err}")
+    except FileNotFoundError:
+        print(f"Error: The file '{PRODUCT_FILE}' or '{REQUEST_FILE}' was not found.")
+        print("Please ensure the data files are in the same directory as the script.")
+    except KeyError as e:
+        print("Error: Unknown Product ID detected in order.")
+        print(f"Product ID: {e}")
+    except PermissionError:
+        print("Error: Permission denied. Please close the CSV files if they are open in Excel.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     main()
