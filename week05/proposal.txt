@@ -1,37 +1,13 @@
 CSE 111 Proposal for a Student Chosen Program
 
-    (This is a proposal. All proposals are written with our best
-    knowledge at the beginning of a project. As we progress from the
-    beginning to the end of a project, we gain more knowledge, and we
-    change some of our proposed ideas. This is part of completing any
-    project and is fine.  However, we still must write a proposal so
-    that our teachers or supervisors know what we intend to do. Please
-    answer each of the following questions to the best of your
-    knowledge.)
+1. What is the title of your program? Sentinel Budget Manager 
 
-1. What is the title of your program?
+2. What real-world problem will your program address or help to solve? Many individuals struggle to maintain a clear overview of their spending habits because data is often scattered across different platforms. This program provides a centralized tool to import transaction data from CSV files, categorize expenses automatically, and compare actual spending against a set budget limit to identify financial leaks.
 
-2. What real-world problem will your program address or help to solve?
+3. What will you learn from developing this program? I will learn how to integrate complex Python concepts, specifically: Managing persistent data by reading from and potentially writing to external CSV files.Implementing robust error handling using try...except blocks to prevent crashes during file I/O or data conversion.Designing "pure" functions that are modular and easily testable with pytest.
 
-3. What will you learn from developing this program?
+4. What Python modules will your program use?  csv: To parse the expenses.csv file and handle tabular data.datetime: To timestamp reports and handle date-based filtering.pytest: To verify the mathematical and logic-based functions.os: To check for the existence of data files before attempting to open them.
 
-4. What Python modules will your program use?
+5. List the names of functions you will need?  main(): The entry point that coordinates user input and output.load_transactions(filename): Opens the CSV file and returns a list of dictionaries representing transactions.calculate_category_totals(transactions): A logic function that iterates through data to sum spending by category.validate_currency(value): A helper function that ensures a string can safely be converted to a positive float.generate_status_report(totals, budget_limit): Compares totals to a limit and returns a string indicating if the user is over or under budget.
 
-    (Some examples are: csv, datetime, functools, matplotlib, math,
-    pandas, pytest, random, requests, and tkinter.)
-
-5. List the names of functions you will need?
-
-    (Remember that the most reusable functions don't get user input and
-    don't print results but instead have parameters and return a result.
-    Functions that get user input and print results are important and do
-    useful work but are not easily reusable.)
-
-    (Remember also that it's hard to test functions that get user input
-    and print results. It's easy to test functions that don't get user
-    input and don't print results but instead have parameters and return
-    a result. Therefore, you should write most of your program functions
-    to have parameters and return a result.)
-
-6. List the names of the test functions you will write.
-
+6. List the names of the test functions you will write. test_calculate_category_totals: Will use pytest to ensure that a sample list of transactions is aggregated into the correct sums for each category.test_validate_currency: Will verify that the function correctly identifies valid dollar amounts (like "10.50") while rejecting invalid strings (like "abc" or "-5.00").
