@@ -1,0 +1,14 @@
+My Project Report
+
+Time Spent Log
+
+Date         Time (hours)   Description of Work
+----------   ------------   -------------------------------
+2026-04-08   2.0            Researched project ideas and planned structure
+2026-04-09   2.5            Designed functions and wrote tracker.py
+2026-04-10   2.0            Built GUI layout and event functions
+2026-04-11   2.5            Implemented CSV saving and file handling
+2026-04-12   1.5            Wrote pytest test functions
+2026-04-13   2.0            Debugged program and tested all features
+
+Total Time: 12.5 hours
